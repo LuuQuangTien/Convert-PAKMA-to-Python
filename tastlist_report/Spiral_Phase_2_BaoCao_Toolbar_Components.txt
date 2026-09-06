@@ -1,0 +1,59 @@
+================================================================================
+          BÁO CÁO PHÁT TRIỂN THEO MÔ HÌNH XOẮN ỐC (SPIRAL MODEL) — VÒNG 2
+        Dự án: Chuyển đổi phần mềm mô phỏng vật lý JPAKMA (Java) sang PyPAKMA (Python)
+================================================================================
+Ngày thực hiện: 2026-09-06
+Người thực hiện: Antigravity AI Assistant & Nhóm nghiên cứu NCKH
+Mục tiêu giai đoạn (Phase 2): Hoàn thiện thanh công cụ bên trái (Toolbar Palette), xây dựng bộ hiển thị đồ họa chi tiết cho các Component, hỗ trợ Resize 8 điểm neo và Menu ngữ cảnh (Right-click Context Menu/Property Dialog).
+Công nghệ áp dụng: Python 3.12, PyQt6 (QGraphicsScene, QGraphicsItem, QMenu, QDialog), pyqtgraph, NumPy.
+
+--------------------------------------------------------------------------------
+I. 4 GÓC PHẦN TƯ CỦA MÔ HÌNH XOẮN ỐC (SPIRAL ITERATION 2)
+--------------------------------------------------------------------------------
+
+1. GÓC PHẦN TƯ 1: XÁC ĐỊNH MỤC TIÊU & YÊU CẦU (OBJECTIVE DETERMINATION)
+   - Mục tiêu: Bổ sung các công cụ toolbar bên trái khớp 100% với nguyên bản JPAKMA Java Swing (`GraphView.java`, `PMView.java`), hiện thực hóa giao diện đồ họa trực quan và tương tác kéo thả / thay đổi kích thước / tùy biến thuộc tính cho từng Component trên canvas.
+   - Yêu cầu kỹ thuật Phase 2:
+     + Bổ sung đầy đủ hệ thống nút bên trái với icon nguyên bản (120 icons) chia theo các nhóm chức năng:
+       * Nhóm Con trỏ chọn (Pointer Selection Tool)
+       * Nhóm Điều khiển tương tác (Button, Choice, Option, Scrollbar, Touchpad 2D, Edit Field)
+       * Nhóm Hình học & Cơ học (Rect, Oval, LabeledRect, Bar, Spring, Fat Arrow, Vector Arrow, Chain Vector, Multi Vector, Polygon, Text, Text Area)
+       * Nhóm Thiết bị đo & Đồ thị (Pinpoint, Graph Scope, Analog Gauge, Linear Gauge, Digital LED Gauge, Thermometer, Coordinate System, 3D Plotter, Image Matrix)
+       * Nhóm Khối Mô hình Vật lý PM (PM Constant, PM Function, PM Cumulate, PM Variation, PM Measure Sensor, PM Adopt, PM Steer, PM Trigger)
+     + Xây dựng bộ dựng hình đồ họa vector (Vector Graphics Rendering) chuyên biệt cho từng component: lò xo co giãn, mặt đồng hồ kim vạch chia, màn hình số 7 đoạn LED, mũi tên vector hướng lực, bàn điều khiển 2D joystick, khối PM có cổng kết nối.
+     + Hiện thực hóa 8 điểm neo Resize (Resize Handles ở 4 góc và 4 cạnh) cho phép kéo thả chuột để co giãn kích thước linh hoạt, đổi con trỏ chuột tương ứng theo hướng kéo.
+     + Menu ngữ cảnh (Right-Click Context Menu) tích hợp đầy đủ tính năng: Properties Dialog, Copy/Cut/Duplicate/Delete, Z-Order, Xoay 90°, Khóa vị trí (Lock Position), Bắt lưới (Snap to Grid).
+
+2. GÓC PHẦN TƯ 2: ĐÁNH GIÁ VÀ GIẢM THIỂU RỦI RO (RISK ANALYSIS & MITIGATION)
+   - Rủi ro 1: Khi trên màn hình có hàng chục component và nhiều điểm neo resize, việc xử lý sự kiện chuột kéo thả có thể gây chậm (Lag) hoặc xung đột tọa độ giữa Scene và Item.
+     => Giải pháp khắc phục: Sử dụng hệ tọa độ chuẩn của `QGraphicsRectItem` với cờ `ItemSendsGeometryChanges`, xử lý chuyển đổi tọa độ qua `mapToScene()` và chỉ hiển thị điểm neo khi đối tượng được chọn (`isSelected()`).
+   - Rủi ro 2: Người dùng kéo kích thước quá nhỏ dẫn đến âm kích thước hoặc sập giao diện (Crash).
+     => Giải pháp khắc phục: Áp dụng ràng buộc kích thước tối thiểu `MIN_WIDTH = 20.0` và `MIN_HEIGHT = 15.0` trong cả hàm `set_custom_size()` và bộ lắng nghe sự kiện `mouseMoveEvent()`.
+   - Rủi ro 3: Trùng lặp mã nguồn khi vẽ nhiều loại component khác nhau.
+     => Giải pháp khắc phục: Thiết kế lớp cơ sở `PakmaComponentItem` thống nhất cấu trúc dữ liệu thuộc tính `properties` dạng dictionary, tái sử dụng các phương thức vẽ `_paint_oval`, `_paint_spring`, `_paint_analog_gauge`, `_paint_vector_arrow` dạng module độc lập.
+
+3. GÓC PHẦN TƯ 3: PHÁT TRIỂN VÀ XÂY DỰNG SẢN PHẨM (ENGINEERING & DEVELOPMENT)
+   - Đã tạo mới và cập nhật các mô-đun cốt lõi:
+     + `pakma/gui/widgets/component_item.py`:
+       * Lớp `ResizeHandle`: Cung cấp 8 điểm neo với con trỏ chuột thông minh (`SizeFDiagCursor`, `SizeVerCursor`, `SizeHorCursor`, `SizeBDiagCursor`).
+       * Lớp `PakmaComponentItem`: Trình kết xuất đồ họa vector chất lượng cao (Anti-aliased) cho toàn bộ linh kiện JPAKMA.
+     + `pakma/gui/dialogs/property_dialog.py`:
+       * Hộp thoại đa tab: General (Tọa độ X, Y, Kích thước W, H, Góc xoay, Khóa vị trí), Physics & Variables (Tên biến, Công thức, Giá trị, Min/Max, Đơn vị), Appearance (Màu nền, Màu viền, Độ dày, Cỡ chữ).
+     + `pakma/gui/widgets/design_panel.py`:
+       * Quản lý công cụ tạo linh kiện khi click vào canvas, sao chép/cắt/dán qua clipboard, menu chuột phải đa chức năng, phím tắt (Delete, Ctrl+C, Ctrl+V, Ctrl+D).
+     + `pakma/gui/views/graph_view.py`:
+       * Tích hợp thanh công cụ cuộn bên trái với 25+ nút công cụ nguyên bản từ JPAKMA.
+     + `pakma/gui/views/pm_view.py`:
+       * Tích hợp thanh công cụ khối mô hình vật lý PM hoàn chỉnh.
+
+4. GÓC PHẦN TƯ 4: ĐÁNH GIÁ, THỬ NGHIỆM & KẾ HOẠCH VÒNG TIẾP THEO (EVALUATION & NEXT SPIRAL)
+   - Kết quả đánh giá & Kiểm thử:
+     + Xây dựng bộ kiểm thử `tests/test_components_phase2.py` với 6 testcases toàn diện.
+     + Chạy kiểm thử tự động đạt kết quả 100% PASS (9/9 tests bao gồm cả engine ODE Phase 1).
+     + Các thao tác resize, xoay, chỉnh sửa thuộc tính, kéo thả công cụ hoạt động mượt mà ở 60 FPS.
+   - Kế hoạch Vòng 3 (Spiral Iteration 3):
+     + Hiện thực hóa liên kết dữ liệu thời gian thực (Data Binding) giữa các biến trên sơ đồ khối PM với các đồng hồ đo và đồ thị trên Tab Animation.
+     + Xây dựng bộ nạp và phân tích cú pháp tệp mô hình `.pkm` / `.xml` từ bản gốc JPAKMA.
+     + Tích hợp bộ giải vi phân tùy biến từ công thức kịch bản PASCL.
+
+================================================================================

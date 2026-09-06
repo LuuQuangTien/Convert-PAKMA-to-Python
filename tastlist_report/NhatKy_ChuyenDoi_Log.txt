@@ -28,27 +28,37 @@
      -> Trạng thái: HOÀN THÀNH
      -> Mô tả: Tích hợp PySerial chạy đa luồng trên PyQt6 QThread, hỗ trợ quét cổng COM tự động, phân tích dữ liệu số và giao diện Terminal trực tiếp.
 
-4. TẦNG GIAO DIỆN NGƯỜI DÙNG (GUI LAYER)
+4. TẦNG GIAO DIỆN NGƯỜI DÙNG & COMPONENT GRAPHICS (GUI LAYER)
    - [Java] de.uniwuerzburg.physik.pakma.gui.MainFrame & Application
      -> [Python] PyPAKMA/pakma/gui/main_window.py & PyPAKMA/main.py
      -> Trạng thái: HOÀN THÀNH
      -> Mô tả: Cửa sổ ứng dụng QMainWindow với hệ thống Menu, Thanh công cụ Ribbon, Thanh trạng thái hiển thị FPS/thời gian, Dark Theme hiện đại.
 
    - [Java] de.uniwuerzburg.physik.pakma.gui.GraphView & WidgetPanel
-     -> [Python] PyPAKMA/pakma/gui/graph_view.py & pakma/gui/plot_widget.py
-     -> Trạng thái: HOÀN THÀNH
-     -> Mô tả: Đồ thị thời gian thực pyqtgraph hiển thị dao động và quỹ đạo không gian pha (Phase Portrait).
+     -> [Python] PyPAKMA/pakma/gui/views/graph_view.py & pakma/gui/widgets/design_panel.py
+     -> Trạng thái: HOÀN THÀNH (Đã nâng cấp Phase 2)
+     -> Mô tả: Đồ thị thời gian thực pyqtgraph hiển thị dao động; Canvas DesignPanel hỗ trợ chọn công cụ, đặt component, kéo thả và vẽ lưới tọa độ.
+
+   - [Java] de.uniwuerzburg.physik.pakma.gui.widget.* & ResizeModifier
+     -> [Python] PyPAKMA/pakma/gui/widgets/component_item.py
+     -> Trạng thái: HOÀN THÀNH (Phase 2)
+     -> Mô tả: Hệ thống 8 điểm neo Resize (Resize Handles), vẽ đồ họa chuyên biệt cho Hình học, Lò xo dao động, Mũi tên vector, Đồng hồ kim/số/cột, Bàn điều khiển 2D, Khối PM.
+
+   - [Java] de.uniwuerzburg.physik.pakma.gui.widget.ContextMenu & PropertyDialog
+     -> [Python] PyPAKMA/pakma/gui/dialogs/property_dialog.py & pakma/gui/widgets/design_panel.py
+     -> Trạng thái: HOÀN THÀNH (Phase 2)
+     -> Mô tả: Menu ngữ cảnh chuột phải (Properties, Copy/Cut/Duplicate/Delete, Z-Order, Xoay 90°, Khóa vị trí, Bắt lưới) và Hộp thoại thuộc tính đa tab.
 
    - [Java] de.uniwuerzburg.physik.pakma.gui.PMView
-     -> [Python] PyPAKMA/pakma/gui/pm_view.py & pakma/gui/widget_canvas.py
-     -> Trạng thái: HOÀN THÀNH
-     -> Mô tả: Trình dựng sơ đồ khối mô phỏng vật lý kéo thả với QGraphicsScene và đường nối dây tín hiệu Bezier.
+     -> [Python] PyPAKMA/pakma/gui/views/pm_view.py
+     -> Trạng thái: HOÀN THÀNH (Đã nâng cấp Phase 2)
+     -> Mô tả: Trình dựng sơ đồ khối mô phỏng vật lý với đầy đủ 10 khối PM công cụ bên trái.
 
    - [Java] de.uniwuerzburg.physik.pakma.gui.ScriptView
-     -> [Python] PyPAKMA/pakma/gui/script_view.py
+     -> [Python] PyPAKMA/pakma/gui/views/script_view.py
      -> Trạng thái: HOÀN THÀNH
      -> Mô tả: Soạn thảo mã kịch bản với QSyntaxHighlighter và bảng điều khiển Console thực thi.
 
 ================================================================================
-TỔNG KẾT: Hoàn thành mục tiêu Phase 1 (Dựng sườn kiến trúc, giao diện và các module cốt lõi).
+TỔNG KẾT: Hoàn thành 100% mục tiêu Phase 1 và Phase 2.
 ================================================================================

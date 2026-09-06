@@ -1,0 +1,78 @@
+================================================================================
+             NHẬT KÝ THỰC THI KIỂM THỬ (TESTCASE EXECUTION LOG) — PHASE 2
+        Dự án: Chuyển đổi phần mềm mô phỏng vật lý JPAKMA (Java) sang PyPAKMA (Python)
+================================================================================
+Thời gian kiểm thử: 2026-09-06 13:33:00
+Môi trường: Windows 11, Python 3.12.9, PyQt6 6.8.0, pyqtgraph 0.13.7, NumPy 2.2.3
+Trình thực thi: unittest discover -s tests -v
+
+--------------------------------------------------------------------------------
+DANH SÁCH TESTCASE ĐÃ THỰC THI (PHASE 2: TOOLBAR & COMPONENTS ENGINE)
+--------------------------------------------------------------------------------
+
+[TESTCASE-P2-01]: Khởi tạo và phân loại các loại Component (Component Creation & Types)
+- Mục tiêu: Kiểm tra việc khởi tạo thành công 15 loại linh kiện cơ bản của JPAKMA (Hình học, Lò xo, Mũi tên Vector, Đồng hồ kim/số/cột, Nút bấm, Thanh trượt, Cần điều khiển 2D, Khối PM Tích phân/Hằng số/Cảm biến).
+- Dữ liệu đầu vào: w_type in ['rect', 'oval', 'spring', 'arrow', 'anagauge', 'diggauge', 'thermgauge', 'button', 'scrollbar', 'touchpad', 'graph', 'pm_accumulate', 'pm_constant', 'pm_function', 'pm_measure'].
+- Kết quả mong đợi: Component được tạo với đúng kích thước, vị trí (x, y) và gắn đủ 8 điểm neo Resize Handles.
+- Kết quả thực tế: 15/15 types tạo thành công, 8 handles/component.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-02]: Tọa độ và vị trí 8 điểm neo Resize (8-Point Resize Handles Positioning)
+- Mục tiêu: Kiểm tra tọa độ của 8 handles (NW, N, NE, E, SE, S, SW, W) được tính toán chính xác trên biên của linh kiện.
+- Dữ liệu đầu vào: Component kích thước 120x80 px tại tọa độ (0, 0).
+- Kết quả mong đợi: 
+  + Top-Left: (-60, -40)
+  + Bottom-Right: (60, 40)
+  + Top-Center: (0, -40)
+- Kết quả thực tế: Trùng khớp 100% sai số < 1e-5.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-03]: Kiểm soát kích thước Resize và giới hạn Min Size (Component Resizing & Limits)
+- Mục tiêu: Kiểm tra khả năng co giãn kích thước động và chống vỡ layout khi kéo kích thước quá nhỏ.
+- Dữ liệu đầu vào: Resize lên 250x150 px, sau đó thu nhỏ về 5x5 px.
+- Kết quả mong đợi: Kích thước đạt 250x150 khi phóng to, và bị kẹp lại ở MIN_WIDTH (20px), MIN_HEIGHT (15px) khi thu nhỏ.
+- Kết quả thực tế: Width = 250, Height = 150 -> Sau thu nhỏ: Width >= 20, Height >= 15.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-04]: Từ điển thuộc tính và Khóa vị trí (Properties Dict & Locking)
+- Mục tiêu: Kiểm tra khả năng lưu trữ thuộc tính vật lý (tên biến, giá trị, đơn vị, màu sắc) và khóa di chuyển.
+- Dữ liệu đầu vào: Gán variable_name='k_spring', value=25.5, unit='N/m', locked=True.
+- Kết quả mong đợi: Thuộc tính được lưu đúng định dạng, cờ locked=True ngăn di chuyển trên canvas.
+- Kết quả thực tế: Thuộc tính lưu trữ chính xác, handles ẩn khi bị khóa.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-05]: Thao tác Canvas và Chế độ Công cụ (DesignPanel Operations & Tool Mode)
+- Mục tiêu: Kiểm tra thêm linh kiện, xóa canvas, bật/tắt lưới tọa độ và kích hoạt công cụ vẽ từ toolbar.
+- Dữ liệu đầu vào: Thêm 2 linh kiện, chuyển active_tool='anagauge', toggle_grid(False/True), clear_canvas().
+- Kết quả mong đợi: Canvas cập nhật danh sách widget, lưới ẩn/hiện, xóa toàn bộ linh kiện về 0.
+- Kết quả thực tế: Canvas hoạt động chính xác.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-06]: Hộp thoại Tùy chỉnh thuộc tính (PropertyDialog Data Mapping)
+- Mục tiêu: Kiểm tra PropertyDialog tải và đồng bộ hai chiều với dữ liệu của linh kiện.
+- Dữ liệu đầu vào: Component Đồng hồ đo áp kế (value=5.25, unit='V').
+- Kết quả mong đợi: QLineEdit, QDoubleSpinBox trong dialog hiển thị đúng giá trị 'Gauge Test', 'anagauge', 5.25, 'V'.
+- Kết quả thực tế: Dialog tải đúng các trường thuộc tính.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-07]: Khử vệt mờ và đường viền thừa (Bounding Rect Margins & Trail Elimination)
+- Mục tiêu: Kiểm tra hàm `boundingRect()` bao trùm toàn bộ nhãn, lò xo và 8 handles, ngăn chặn hiện tượng lưu vệt nét đứt khi di chuyển.
+- Dữ liệu đầu vào: Component `spring` kích thước 100x50 px.
+- Kết quả mong đợi: `boundingRect` lớn hơn `rect` ở tất cả 4 phía (margin_x >= 14, margin_top >= 24, margin_bottom >= 14).
+- Kết quả thực tế: Đạt yêu cầu, kết hợp chế độ `FullViewportUpdate` loại bỏ hoàn toàn vết mờ trail.
+- Đánh giá: [PASS]
+
+[TESTCASE-P2-08]: Di chuyển không gian làm việc (Workspace Middle Mouse Panning)
+- Mục tiêu: Kiểm tra cơ chế kéo thả chuột giữa (Middle Button Drag) hoặc Alt+Left Drag để cuộn/di chuyển workspace tự do.
+- Dữ liệu đầu vào: Sự kiện chuột giữa nhấn, kéo và nhả.
+- Kết quả mong đợi: Cờ `_is_panning` chuyển đổi đúng, cuộn thanh scrollbar mượt mà.
+- Kết quả thực tế: Hoạt động chính xác, biểu tượng con trỏ chuyển `ClosedHandCursor`.
+- Đánh giá: [PASS]
+
+--------------------------------------------------------------------------------
+TỔNG KẾT KẾT QUẢ KIỂM THỬ:
+- Tổng số testcases thực thi: 8 testcases Phase 2 + 3 testcases Phase 1 (Tổng 11/11 tests).
+- Số lượng PASS: 11 (100%).
+- Số lượng FAIL / ERROR: 0 (0%).
+- Trạng thái kiểm thử: ĐẠT TIÊU CHUẨN CHẤT LƯỢNG VÒNG 2 (ĐÃ SỬA LỖI TRAIL & BỔ SUNG PANNING).
+================================================================================

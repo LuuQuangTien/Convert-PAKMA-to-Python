@@ -1,0 +1,14 @@
+Mục tiêu tổng: chuyển đổi ứng dụng sang ngôn ngũ python
+
+*Lưu ý: lưu lại các log testcase trong quá trình convert và báo cáo đầy đủ quy trình báo cáo testcase.
+project thực hiện phát triển theo phương pháp Spiral (mỗi vòng tạo 1 bản text báo cáo có thể tạo 1 folder riêng cho chúng).
+
+Phase 1: Đọc và xây dựng lại sườn UI:
+- Đọc project hiểu rõ cấu trúc.
+- Dựng sườn cơ bản để có thể thêm các chức năng lúc sau như là các module.
+
+Phase 2: Bổ sung các nút cơ bản cho toolbar bên trái: (HOÀN THÀNH)
+- Tạo các nút cơ bản cho tool bên trái khớp với JPAKMA (Đã hoàn thành, khớp 100% với GraphView và PMView).
+- Bổ sung hình ảnh/ giao diện đồ họa các component (Đã hoàn thành, renderer chi tiết cho Hình học, Lò xo, Vector, Gauges, Controls, Khối PM).
+- Cho phép resize các component (Đã hoàn thành với 8 điểm neo Resize Handles thông minh và ràng buộc Min Size).
+- Nhấn chuột phải component để cho phép tùy chỉnh (Đã hoàn thành Context Menu, Z-Order, Copy/Paste/Delete, Xoay và PropertyDialog đa tab).

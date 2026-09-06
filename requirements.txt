@@ -1,0 +1,11 @@
+# Core GUI Framework
+PyQt6>=6.6.0
+PyQt6-Qt6>=6.6.0
+PyQt6_sip>=13.6.0
+
+# Scientific & High-Performance Real-Time Plotting
+pyqtgraph>=0.13.0
+numpy>=1.25.0
+
+# Hardware & Serial Sensor Communication
+pyserial>=3.5

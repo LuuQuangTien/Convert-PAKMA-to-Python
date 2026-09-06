@@ -1,0 +1,54 @@
+================================================================================
+                       NHẬT KÝ CHI TIẾT TIẾN TRÌNH CHUYỂN ĐỔI (CONVERT LOG)
+                       Dự án: JPAKMA (Java) -> PyPAKMA (Python)
+================================================================================
+
+[MỤC LỤC ÁNH XẠ KIẾN TRÚC JAVA -> PYTHON]
+
+1. TẦNG DỮ LIỆU & MÔ HÌNH (MODEL LAYER)
+   - [Java] de.uniwuerzburg.physik.pakma.model.Model
+     -> [Python] PyPAKMA/pakma/model/model.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Chuyển đổi mô hình Observable lưu trữ thuộc tính key-value với đầy đủ get/set int, double, string, boolean, list.
+
+   - [Java] de.uniwuerzburg.physik.pakma.model.Document
+     -> [Python] PyPAKMA/pakma/model/document.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Chuyển đổi lớp quản lý danh sách Model, quản lý transaction đóng gói cập nhật dữ liệu.
+
+2. TẦNG BỘ TÍNH TOÁN VẬT LÝ & GIẢI VI PHÂN (ENGINE LAYER)
+   - [Java] de.uniwuerzburg.physik.pakma.pme.RungeKuttaScripter & EulerScripter
+     -> [Python] PyPAKMA/pakma/engine/simulation.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Sử dụng NumPy tối ưu hóa tính toán giải vi phân ODE theo thuật toán Runge-Kutta bậc 4 (RK4) và Euler bậc 1, trích xuất dữ liệu mảng hiệu năng cao.
+
+3. TẦNG GIAO TIẾP THIẾT BỊ PHẦN CỨNG (HARDWARE / SERIAL LAYER)
+   - [Java] de.uniwuerzburg.physik.pakma.pme.serial (CASSY / Serial Port)
+     -> [Python] PyPAKMA/pakma/hardware/serial_manager.py & pakma/gui/serial_dialog.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Tích hợp PySerial chạy đa luồng trên PyQt6 QThread, hỗ trợ quét cổng COM tự động, phân tích dữ liệu số và giao diện Terminal trực tiếp.
+
+4. TẦNG GIAO DIỆN NGƯỜI DÙNG (GUI LAYER)
+   - [Java] de.uniwuerzburg.physik.pakma.gui.MainFrame & Application
+     -> [Python] PyPAKMA/pakma/gui/main_window.py & PyPAKMA/main.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Cửa sổ ứng dụng QMainWindow với hệ thống Menu, Thanh công cụ Ribbon, Thanh trạng thái hiển thị FPS/thời gian, Dark Theme hiện đại.
+
+   - [Java] de.uniwuerzburg.physik.pakma.gui.GraphView & WidgetPanel
+     -> [Python] PyPAKMA/pakma/gui/graph_view.py & pakma/gui/plot_widget.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Đồ thị thời gian thực pyqtgraph hiển thị dao động và quỹ đạo không gian pha (Phase Portrait).
+
+   - [Java] de.uniwuerzburg.physik.pakma.gui.PMView
+     -> [Python] PyPAKMA/pakma/gui/pm_view.py & pakma/gui/widget_canvas.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Trình dựng sơ đồ khối mô phỏng vật lý kéo thả với QGraphicsScene và đường nối dây tín hiệu Bezier.
+
+   - [Java] de.uniwuerzburg.physik.pakma.gui.ScriptView
+     -> [Python] PyPAKMA/pakma/gui/script_view.py
+     -> Trạng thái: HOÀN THÀNH
+     -> Mô tả: Soạn thảo mã kịch bản với QSyntaxHighlighter và bảng điều khiển Console thực thi.
+
+================================================================================
+TỔNG KẾT: Hoàn thành mục tiêu Phase 1 (Dựng sườn kiến trúc, giao diện và các module cốt lõi).
+================================================================================

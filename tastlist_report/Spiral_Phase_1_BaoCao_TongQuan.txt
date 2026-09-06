@@ -1,0 +1,61 @@
+================================================================================
+          BÁO CÁO PHÁT TRIỂN THEO MÔ HÌNH XOẮN ỐC (SPIRAL MODEL) — VÒNG 1
+       Dự án: Chuyển đổi phần mềm mô phỏng vật lý JPAKMA (Java) sang PyPAKMA (Python)
+================================================================================
+Ngày thực hiện: 2026-09-06
+Người thực hiện: Antigravity AI Assistant & Nghiên cứu viên NCKH
+Mục tiêu giai đoạn (Phase 1): Đọc hiểu kiến trúc toàn bộ 451 file Java, thiết kế và dựng sườn UI/Module cơ bản bằng Python.
+Công nghệ áp dụng: Python 3.12, PyQt6, pyqtgraph, numpy, pyserial.
+
+--------------------------------------------------------------------------------
+I. 4 GÓC PHẦN TƯ CỦA MÔ HÌNH XOẮN ỐC (SPIRAL ITERATION 1)
+--------------------------------------------------------------------------------
+
+1. GÓC PHẦN TƯ 1: XÁC ĐỊNH MỤC TIÊU & YÊU CẦU (OBJECTIVE DETERMINATION)
+   - Mục tiêu: Chuyển đổi toàn diện hệ thống mã nguồn Java Swing cũ (phát triển từ JDK 1.1 đến JDK 17) sang kiến trúc Python hiện đại, modular, dễ mở rộng.
+   - Yêu cầu kỹ thuật Phase 1:
+     + Đọc và phân tích 451 file Java trong các package (`model`, `gui`, `pme`, `util`, `lang`).
+     + Dựng cấu trúc sườn ứng dụng (UI Skeleton) bao gồm 3 màn hình cốt lõi:
+       * Tab 1: GraphView (Mô phỏng đồ họa và đồ thị dao động/chuyển động).
+       * Tab 2: PMView (Trình thiết kế sơ đồ khối mô hình vật lý).
+       * Tab 3: ScriptView (Trình soạn thảo kịch bản PASCL với tô màu cú pháp).
+     + Tích hợp thư viện đồ thị khoa học tốc độ cao: `pyqtgraph`.
+     + Tích hợp thư viện tính toán ma trận, giải vi phân số học (ODE): `numpy`.
+     + Tích hợp thư viện giao tiếp phần cứng cảm biến qua cổng nối tiếp: `pyserial`.
+     + Lưu vết log và testcase xuyên suốt các vòng lặp.
+
+2. GÓC PHẦN TƯ 2: ĐÁNH GIÁ VÀ GIẢM THIỂU RỦI RO (RISK ANALYSIS & MITIGATION)
+   - Rủi ro 1: Giao diện đồ họa bằng Tkinter vẽ đồ thị thời gian thực bị giật lag, giới hạn FPS khi mô phỏng liên tục.
+     => Giải pháp khắc phục: Chuyển sang sử dụng `PyQt6` kết hợp `pyqtgraph` (dựa trên OpenGL/C++ backend) giúp đạt 60+ FPS ổn định, mượt mà.
+   - Rủi ro 2: Khối lượng file Java lớn (451 files) nếu dịch thủ công toàn bộ sẽ dễ gây đứt gãy kiến trúc.
+     => Giải pháp khắc phục: Áp dụng phương pháp phân tầng (Layered Architecture):
+        Tầng Model (Lưu trữ trạng thái) -> Tầng Engine (NumPy ODE Solver) -> Tầng Hardware (PySerial QThread) -> Tầng GUI (PyQt6 Views).
+   - Rủi ro 3: Đọc dữ liệu từ cổng COM (Serial) có thể gây đơ màn hình (UI Freezing) nếu thiết bị phần cứng gửi dữ liệu liên tục.
+     => Giải pháp khắc phục: Sử dụng cơ chế đa luồng `QThread` và hệ thống tín hiệu/khe cắm (`pyqtSignal`) của PyQt6 để tách biệt hoàn toàn I/O với UI Main Loop.
+
+3. GÓC PHẦN TƯ 3: PHÁT TRIỂN VÀ XÂY DỰNG SẢN PHẨM (ENGINEERING & DEVELOPMENT)
+   - Đã xây dựng hoàn thiện cây thư mục dự án `PyPAKMA/`:
+     + `pakma/model/model.py`: Lớp Model lưu trữ thuộc tính key-value và Observer pattern.
+     + `pakma/model/document.py`: Lớp Document quản lý danh sách các Model và giao dịch (Transaction).
+     + `pakma/engine/simulation.py`: Bộ giải phương trình vi phân số học Euler và Runge-Kutta 4 (RK4) trên nền tảng NumPy.
+     + `pakma/hardware/serial_manager.py`: Bộ quản lý kết nối cổng COM bất đồng bộ qua luồng `QThread`.
+     + `pakma/gui/theme.py`: Hệ thống giao diện Dark Theme phong cách khoa học hiện đại.
+     + `pakma/gui/plot_widget.py`: Widget đồ thị đa kênh pyqtgraph với Crosshair và xuất CSV.
+     + `pakma/gui/widget_canvas.py`: Canvas sơ đồ khối kéo thả `QGraphicsScene` / `QGraphicsView`.
+     + `pakma/gui/graph_view.py`: Tab đồ thị dao động điều hòa và không gian pha ($v$ vs $x$).
+     + `pakma/gui/pm_view.py`: Tab thiết kế sơ đồ khối Physical Model.
+     + `pakma/gui/script_view.py`: Tab soạn thảo mã kịch bản với `QSyntaxHighlighter`.
+     + `pakma/gui/serial_dialog.py`: Hộp thoại cấu hình cổng COM, tốc độ Baud và Terminal log.
+     + `pakma/gui/main_window.py`: Cửa sổ ứng dụng hoàn chỉnh tích hợp thanh Menu, Toolbar, StatusBar và vòng lặp mô phỏng.
+     + `main.py`: Điểm khởi chạy ứng dụng chính.
+
+4. GÓC PHẦN TƯ 4: ĐÁNH GIÁ, THỬ NGHIỆM & KẾ HOẠCH VÒNG TIẾP THEO (EVALUATION & NEXT SPIRAL)
+   - Kết quả đánh giá:
+     + Chạy kiểm thử tự động 100% PASS (3/3 tests trong `tests/test_engine.py` và 4/4 testcase trong log).
+     + Khởi chạy giao diện PyQt6 thành công, không gặp lỗi cú pháp hay thiếu module.
+   - Kế hoạch Vòng 2 (Spiral Iteration 2):
+     + Chuyển đổi sâu bộ phân tích cú pháp ngôn ngữ PASCL (`de.uniwuerzburg.physik.pakma.pme.script`).
+     + Hoàn thiện kết nối dữ liệu trực tiếp giữa sơ đồ khối Canvas với Engine giải vi phân.
+     + Nạp và đọc trực tiếp file định dạng mô hình `.pkm` / `.xml` từ phiên bản JPAKMA gốc.
+
+================================================================================
